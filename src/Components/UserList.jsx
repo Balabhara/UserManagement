@@ -1,3 +1,4 @@
+// src/Components/UserList.jsx
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -10,26 +11,35 @@ import {
   Segmented,
   Modal,
   Layout,
-  Tooltip
+  Tooltip,
 } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../features/auth/authSlice";
 import UserCard from "./UserCard";
 import "./UserList.css";
-import { TableOutlined, UnorderedListOutlined, LogoutOutlined  } from "@ant-design/icons";
-import { loadUsers, deleteUser, setPage } from "../../src/features/user/usersSlice";
-import UserModal from "../Components/UserModal";
+import {
+  TableOutlined,
+  UnorderedListOutlined,
+  LogoutOutlined,
+} from "@ant-design/icons";
+
+import {
+  loadUsers,
+  deleteUser,
+  setPage,
+} from "../../src/features/user/usersSlice";
+import UserModal from "./UserModal";
 const { Header } = Layout;
 
 export default function UserList() {
   const dispatch = useDispatch();
-  const { allData, loading, page } = useSelector((s) => s.users);
+  const navigate = useNavigate();
+
+  const { data, loading, page } = useSelector((s) => s.users);
 
   const [search, setSearch] = useState("");
-   const navigate = useNavigate();
   const [view, setView] = useState("table");
-
   const [open, setOpen] = useState(false);
   const [editData, setEditData] = useState(null);
 
@@ -37,38 +47,38 @@ export default function UserList() {
     dispatch(loadUsers());
   }, [dispatch]);
 
-    const handleLogout = () => {
+  const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
-  // Filter users across ALL data
-  const filtered = allData.filter((u) =>
+
+  const filtered = data.filter((u) =>
     `${u.first_name} ${u.last_name}`.toLowerCase().includes(search.toLowerCase())
   );
 
-  // 🔥 FIX: Reset page if search results are fewer than current page start
   useEffect(() => {
     const maxPage = Math.ceil(filtered.length / 5);
     if (page > maxPage) dispatch(setPage(1));
   }, [filtered.length, page, dispatch]);
 
   const startIdx = (page - 1) * 5;
-  const endIdx = startIdx + 5;
-  const pageData = filtered.slice(startIdx, endIdx);
+  const pageData = filtered.slice(startIdx, startIdx + 5);
 
   const confirmDelete = (id) => {
     Modal.confirm({
-      title: "Confirm Deletion",
+      title: "Confirm deletion",
       content: "Are you sure you want to delete this user?",
-      okText: "Yes, Delete",
+      okText: "Delete",
+      okButtonProps: { style: { background: "red", borderColor: "red" } },
       cancelText: "Cancel",
-      centered: true,
-      okButtonProps: { style: { backgroundColor: "red", borderColor: "red" } },
       onOk: () => dispatch(deleteUser(id)),
+      style: {
+        top: "50%",
+      },
     });
   };
 
-  const columns = [
+   const columns = [
     {
       title: "",
       render: (row) => <Avatar src={row.avatar} size={45} />,

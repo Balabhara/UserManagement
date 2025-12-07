@@ -1,44 +1,64 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/apiClient";
+
+export const login = createAsyncThunk(
+  "auth/login",
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await api.post(
+        "/login",
+        { email, password },
+        {
+          headers: {
+            "x-api-key": "reqres_e3e2f6b35cf7453aa679bc86b77af95e",
+          },
+        }
+      );
+
+      const token = response.data.token;
+
+      // Save login token
+      localStorage.setItem("token", token);
+
+      return token;
+    } catch (error) {
+      return rejectWithValue("Invalid email or password");
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: localStorage.getItem("token") || null,
     loading: false,
-    error: ""
+    error: "",
   },
+
   reducers: {
-    loginStart: (s) => { s.loading = true; s.error = ""; },
-    loginSuccess: (s, a) => {
-      s.loading = false;
-      s.token = a.payload;
-    },
-    loginFail: (s, a) => {
-      s.loading = false;
-      s.error = a.payload;
-    },
-    logout: (s) => {
-      s.token = null;
+    logout: (state) => {
+      state.token = null;
       localStorage.removeItem("token");
       localStorage.removeItem("users_data");
-    }
-  }
+    },
+  },
+
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = "";
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+  },
 });
 
-export const { loginStart, loginSuccess, loginFail, logout } = authSlice.actions;
-
-export const login = (email, password) => async (dispatch) => {
-  dispatch(loginStart());
-  try {
-    const res = await api.post("/login", { email, password }, {
-         headers: {"x-api-key": "reqres_e3e2f6b35cf7453aa679bc86b77af95e"}
-        });
-    localStorage.setItem("token", res.data.token);
-    dispatch(loginSuccess(res.data.token));
-  } catch (err) {
-    dispatch(loginFail("Invalid credentials"));
-  }
-};
-
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

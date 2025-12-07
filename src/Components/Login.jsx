@@ -13,14 +13,14 @@ export default function Login() {
   if (token) navigate("/users");
 
   const onFinish = (v) => {
-    dispatch(login(v.email, v.password));
+    dispatch(login({ email: v.email, password: v.password }));
   };
 
   return (
     <div style={{ display: "flex", justifyContent: "center", marginTop: 100 }}>
       <Card style={{ width: 400, padding: "10px 20px" }}>
         {error && <Alert type="error" message={error} style={{ marginBottom: 15 }} />}
-
+        {/* Login form */}
         <Form
           onFinish={onFinish}
           layout="vertical"
