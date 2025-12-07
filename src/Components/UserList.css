@@ -1,0 +1,29 @@
+.view-toggle .ant-segmented-item {
+  padding: 2px 10px;
+  gap: 8px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.view-toggle .seg-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Selected item styling */
+.view-toggle .ant-segmented-item-selected {
+  color: #1677ff !important;
+  background: white !important;
+  border: 1px solid #1677ff;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* Unselected styling */
+.view-toggle .ant-segmented-item:not(.ant-segmented-item-selected) {
+  color: #555 !important;
+}
+
+

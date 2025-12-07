@@ -1,0 +1,29 @@
+.user-card {
+  position: relative;
+  display: inline-block;
+}
+
+.card-content {
+  transition: 0.3s;
+}
+
+/* Hide action buttons normally */
+.card-hover-actions {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0.3s;
+}
+
+/* On hover → blur background + show buttons */
+.user-card:hover .card-content {
+  filter: brightness(0.4);
+}
+
+.user-card:hover .card-hover-actions {
+  opacity: 1;
+  visibility: visible;
+}
