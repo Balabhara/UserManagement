@@ -2,7 +2,6 @@
 import React from "react";
 import { Card, Avatar, Button, Space } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
 import "./UserCard.css";
 
 export default function UserCard({ user, onEdit, onDelete }) {

@@ -9,7 +9,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error, token } = useSelector((s) => s.auth);
-
+  // after the submit, token is present user page wil be navigated.
   if (token) navigate("/users");
 
   const onFinish = (v) => {

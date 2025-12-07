@@ -1,4 +1,3 @@
-// src/Components/UserList.jsx
 import React, { useEffect, useState } from "react";
 import {
   Table,
@@ -47,6 +46,7 @@ export default function UserList() {
     dispatch(loadUsers());
   }, [dispatch]);
 
+  // click logout button, token will be removed and login page is navigated
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
@@ -120,7 +120,7 @@ export default function UserList() {
 
   return (
     <>
-     {/* HEADER MOVED HERE */}
+     {/* HEADER */}
       <Header
         style={{
           display: "flex",
@@ -144,7 +144,6 @@ export default function UserList() {
       </Header>
     <div style={{ padding: 20 }}>
       <Card>
-        {/* Header */}
         <div
           style={{
             display: "flex",
