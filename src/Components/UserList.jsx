@@ -9,19 +9,25 @@ import {
   Pagination,
   Segmented,
   Modal,
+  Layout,
+  Tooltip
 } from "antd";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../features/auth/authSlice";
 import UserCard from "./UserCard";
 import "./UserList.css";
-import { TableOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import { TableOutlined, UnorderedListOutlined, LogoutOutlined  } from "@ant-design/icons";
 import { loadUsers, deleteUser, setPage } from "../../src/features/user/usersSlice";
 import UserModal from "../Components/UserModal";
+const { Header } = Layout;
 
 export default function UserList() {
   const dispatch = useDispatch();
   const { allData, loading, page } = useSelector((s) => s.users);
 
   const [search, setSearch] = useState("");
+   const navigate = useNavigate();
   const [view, setView] = useState("table");
 
   const [open, setOpen] = useState(false);
@@ -31,6 +37,10 @@ export default function UserList() {
     dispatch(loadUsers());
   }, [dispatch]);
 
+    const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
+  };
   // Filter users across ALL data
   const filtered = allData.filter((u) =>
     `${u.first_name} ${u.last_name}`.toLowerCase().includes(search.toLowerCase())
@@ -99,6 +109,29 @@ export default function UserList() {
   ];
 
   return (
+    <>
+     {/* HEADER MOVED HERE */}
+      <Header
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: 10,
+          color: "#fff",
+          background: "#001529",
+        }}
+      >
+        <div style={{ fontSize: 18 }}>Bala Bharathi M</div>
+
+        <Tooltip title="Logout">
+          <Button
+            style={{ background: "red" }}
+            type="primary"
+            onClick={handleLogout}
+            icon={<LogoutOutlined style={{ color: "white" }} />}
+          />
+        </Tooltip>
+      </Header>
     <div style={{ padding: 20 }}>
       <Card>
         {/* Header */}
@@ -216,5 +249,6 @@ export default function UserList() {
 
       <UserModal open={open} onClose={() => setOpen(false)} editData={editData} />
     </div>
+    </>
   );
 }
